@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net-forward/app"
+	"github.com/sdm2345/net-forward/app"
 )
 
 type arrayFlags []string
