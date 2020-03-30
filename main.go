@@ -8,7 +8,6 @@ import (
 
 type arrayFlags []string
 
-// Value ...
 func (i *arrayFlags) String() string {
 	return fmt.Sprint(*i)
 }
