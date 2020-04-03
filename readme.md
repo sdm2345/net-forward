@@ -4,7 +4,7 @@ net-forward
 
 ```bash
  
-go get https://github.com/sdm2345/net-forward
+go get -u https://github.com/sdm2345/net-forward
 
  
 # 测试
@@ -19,6 +19,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o  net-forward.linux .
 
 # 本机 启动 redis
 测试
+go build . 
 ./net-forward -l tcp://0.0.0.0:80 -f tcp://0.0.0.0:6379
 
 直接访问:
