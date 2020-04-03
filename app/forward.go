@@ -2,57 +2,28 @@ package app
 
 import (
 	"context"
-	"errors"
 	"io"
 	"log"
 	"net"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 )
 
-func StartForward(rules []string) {
+func StartForward(listens, rules []string) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	for _, rule := range rules {
-
-		go Listen(ctx, rule)
+	for i, rule := range rules {
+		go ListenTcp(ctx, listens[i], rule)
 	}
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
 	<-c
-	log.Println("\n- Ctrl+C pressed in Terminal")
 	cancel()
 	os.Exit(0)
 
-}
-
-func Listen(ctx context.Context, rule string) {
-
-	rule = strings.Trim(rule, "/")
-	arr := strings.Split(rule, "/")
-	if len(arr) == 0 {
-		panic(errors.New("error params:" + rule))
-	}
-
-	//todo 先支持 tcp
-	if arr[0] == "tcp" {
-		_, _, err := net.SplitHostPort(strings.Join(arr[1:3], ":"))
-		if err != nil {
-			panic(err)
-		}
-		_, _, err = net.SplitHostPort(strings.Join(arr[4:], ":"))
-		if err != nil {
-			panic(err)
-		}
-
-		ListenTcp(ctx, strings.Join(arr[1:3], ":"), strings.Join(arr[4:], ":"))
-	} else {
-		panic(errors.New("error params:" + rule))
-	}
 }
 
 func ListenTcp(ctx context.Context, fromAddr, toAddr string) {
